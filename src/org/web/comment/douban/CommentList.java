@@ -18,7 +18,7 @@ public class CommentList {
 
 	static Logger logger = LoggerFactory.getLogger(CommentList .class);
 	
-	public int increment=15;
+	public int increment=1;
 	
 	public String prefix="";
 	
@@ -26,7 +26,7 @@ public class CommentList {
 	
 	public int current=0;
 	
-	public int top=10;
+	public int top=2;
 	
 	public int tot=0;
 	
@@ -72,11 +72,14 @@ public class CommentList {
 		//System.out.println(doc.html());
 		Elements tots=doc.getElementsByAttributeValue("id", "total-comments");
 		tot=Integer.parseInt(tots.first().text().replaceFirst("全部共", "").replaceAll("条", "").trim());
-	
+	    System.out.println("tot1:"+tot);
+	    tot=(int)((double)tot/(double)20);
 		if(current>tot)
 		{
 			return null;
 		}
+		System.out.println("tot2:"+tot);
+
 		Elements links=doc.getElementsByClass("comment-item");
         
 		int index=0;

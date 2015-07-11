@@ -36,34 +36,53 @@ public class CommentTask {
 			BufferedReader br = new BufferedReader(new FileReader(main_list));
 			PrintWriter pw = new PrintWriter(new FileWriter(output, true));
 
-			int index=0;
-			
-			while ((bookLink = br.readLine()) != null) {
-				logger.info("crawl book " + bookLink);
-				String prefix = bookLink.split("\\s+")[0].replaceAll("\\?from=tag_all", "").replaceAll("\\s+", "") + "comments/hot?p=";
-		
-				String suffix = "";
-				int increment = 15;
-				int current =0;
-				if(index==0)
-				{
-					current=0;//break point
-					index++;
-				}
-				CommentList clist = new CommentList(prefix, suffix, increment,
-						current);
-				List<String> list = null;
-				while (true) {
-					
-						list = clist.getCommentList(clist.nextPage());
-						if (list == null || list.size() < 1) {
-							break;
-						}
+			int index = 0;
 
-						for (String comment : list) {
-							pw.println(comment);
+			while ((bookLink = br.readLine()) != null) {
+
+				try {
+					logger.info("crawl book " + bookLink);
+					String prefix = bookLink.replaceAll("\\?from=tag_all", "")
+							.replaceAll("\\s+", "") + "comments/hot?p=";
+
+					String suffix = "";
+					int increment = 1;
+					int current = 0;
+					if (index == 0) {
+						current = 0;// break point
+						index++;
+					}
+					CommentList clist = new CommentList(prefix, suffix,
+							increment, current);
+					List<String> list = null;
+					while (true) {
+						Thread.sleep(3000);
+						try {
+							list = clist.getCommentList(clist.nextPage());
+							if(list==null)
+							{
+								break;
+							}
+							
+							//System.out.println("list.size:"+list.size());
+							
+							if ( list.size() < 1) {
+								break;
+							}
+
+							for (String comment : list) {
+								pw.println(bookLink.replaceAll("\\?from=tag_all", "")+"\001"+comment);
+								//System.out.println(bookLink.replaceAll("\\?from=tag_all", "")+"\001"+comment);
+								pw.flush();
+							}
+						
+						} catch (Exception e) {
+							Thread.sleep(6000 * 10);
 						}
-					
+					}
+
+				} catch (Exception e) {
+					Thread.sleep(6000 * 10);
 				}
 			}
 
@@ -77,7 +96,7 @@ public class CommentTask {
 
 	public static void main(String[] args) {
 		CommentTask task = new CommentTask();
-		task.getAllCommentList("output/douban/booklist.txt",
+		task.getAllCommentList("output/douban/booklist_uniq.txt",
 				"output/douban/commentlist.txt");
 
 	}
