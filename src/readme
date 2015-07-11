@@ -1,0 +1,7 @@
+抓取图书的点评信息
+douban:
+http://www.douban.com/tag/%E5%B0%8F%E8%AF%B4/book?start=15
+http://book.douban.com/subject/26371317/?from=tag_all
+http://book.douban.com/subject/26371317/comments/hot?p=2
+http://book.douban.com/subject/1008145/?from=tag_all
+http://book.douban.com/subject/1008145/comments/hot?p=2
