@@ -9,13 +9,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Task {
+public class CommentTask {
 
 	static Logger logger = LoggerFactory.getLogger(Task.class);
 
 	String[] proxy_hosts = { "122.72.111.98", "122.72.99.4" };
 
-	int method = 1;
+	int method = 0;
 
 	public void changeProxy() {
 		int c = method % 3;
@@ -29,38 +29,39 @@ public class Task {
 		}
 	}
 
-	public void getAllBookList(String main_list, String output) {
+	public void getAllCommentList(String main_list, String output) {
 		try {
-			//changeProxy();
-			String tagLink = "";
+
+			String bookLink = "";
 			BufferedReader br = new BufferedReader(new FileReader(main_list));
 			PrintWriter pw = new PrintWriter(new FileWriter(output, true));
 
 			int index=0;
 			
-			while ((tagLink = br.readLine()) != null) {
-				logger.info("crawl tag " + tagLink);
-				String prefix = tagLink + "book?start=";
+			while ((bookLink = br.readLine()) != null) {
+				logger.info("crawl book " + bookLink);
+				String prefix = bookLink.split("\\s+")[0].replaceAll("\\?from=tag_all", "").replaceAll("\\s+", "") + "comments/hot?p=";
+		
 				String suffix = "";
 				int increment = 15;
 				int current =0;
 				if(index==0)
 				{
-					current=38805;//break point
+					current=0;//break point
 					index++;
 				}
-				BookList blist = new BookList(prefix, suffix, increment,
+				CommentList clist = new CommentList(prefix, suffix, increment,
 						current);
 				List<String> list = null;
 				while (true) {
 					
-						list = blist.getBookList(blist.nextPage());
+						list = clist.getCommentList(clist.nextPage());
 						if (list == null || list.size() < 1) {
 							break;
 						}
 
-						for (String book : list) {
-							pw.println(book);
+						for (String comment : list) {
+							pw.println(comment);
 						}
 					
 				}
@@ -75,10 +76,9 @@ public class Task {
 	}
 
 	public static void main(String[] args) {
-		Task task = new Task();
-		task.getAllBookList("src/org/web/comment/douban/main_list",
-				"output/douban/booklist.txt");
+		CommentTask task = new CommentTask();
+		task.getAllCommentList("output/douban/booklist.txt",
+				"output/douban/commentlist.txt");
 
 	}
-
 }

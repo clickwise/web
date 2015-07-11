@@ -26,6 +26,10 @@ public class CommentList {
 	
 	public int current=0;
 	
+	public int top=10;
+	
+	public int tot=0;
+	
 	public CommentList (String prefix,String suffix,int increment,int current)
 	{
 		this.prefix=prefix;
@@ -66,11 +70,36 @@ public class CommentList {
 		doc = Jsoup.parse(Fetcher.getSource(url, false));
 	
 		//System.out.println(doc.html());
+		Elements tots=doc.getElementsByAttributeValue("id", "total-comments");
+		tot=Integer.parseInt(tots.first().text().replaceFirst("全部共", "").replaceAll("条", "").trim());
+	
+		if(current>tot)
+		{
+			return null;
+		}
 		Elements links=doc.getElementsByClass("comment-item");
-        for(Element link:links)
+        
+		int index=0;
+		
+		String cstar="";
+		String comment="";
+		for(Element link:links)
         {
-        	System.out.println(link);
-             System.out.println(link.getElementsByClass("comment-info").first().getElementsByTag("span").first().attr("class"));
+        	index++;
+        	
+        	//star
+        	Elements stars=link.getElementsByClass("comment-info").first().getElementsByTag("span");
+        	cstar="";
+        	for(Element star:stars)
+        	{
+        	 if(star.outerHtml().indexOf("user-stars")>-1)
+              cstar=star.attr("class");
+        	}
+        	
+        	//comment
+        	comment=link.getElementsByClass("comment-content").first().text();
+        	
+        	commentList.add(cstar+"\001"+comment);
         	
         }
 		return commentList;
@@ -83,11 +112,10 @@ public class CommentList {
 		String prefix="http://book.douban.com/subject/20275657/comments/hot?p=";
 		String suffix="";
 		int increment=1;
-		int current=2;	
+		int current=0;	
 		CommentList clist=new CommentList(prefix,suffix,increment,current);
-		clist.currentPage();
 	 
-		List<String> list=clist.getCommentList(clist.currentPage());
+		List<String> list=clist.getCommentList(clist.nextPage());
 		for(String book:list)
 		{
 		  System.out.println(book);	
