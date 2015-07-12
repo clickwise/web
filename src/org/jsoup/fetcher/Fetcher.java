@@ -103,6 +103,13 @@ public class Fetcher {
 					.setParameter(
 							"User-Agent:",
 							"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36");
+			httpclient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,  10000);//连接时间20s
+			httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,  10000);
+			httpclient.getParams().setParameter("http.socket.timeout",10000);
+
+			httpclient.getParams().setParameter("http.connection.timeout",10000);
+
+			httpclient.getParams().setParameter("http.connection-manager.timeout",10000);
 		} else if (type == 1) {//firefox
 			getRandomPrxoy();
 			//rani=13;
@@ -134,6 +141,13 @@ public class Fetcher {
 					.getParams()
 					.setParameter("User-Agent:",
 							"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0");
+			httpclient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,  10000);//连接时间20s
+			httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,  10000);
+			httpclient.getParams().setParameter("http.socket.timeout",10000);
+
+			httpclient.getParams().setParameter("http.connection.timeout",10000);
+
+			httpclient.getParams().setParameter("http.connection-manager.timeout",10000);
 		}else if(type == 2)//no proxy
 		{
 			httpclient
@@ -155,6 +169,13 @@ public class Fetcher {
 					.getParams()
 					.setParameter("User-Agent:",
 							"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0");
+			httpclient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,  10000);//连接时间20s
+			httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,  10000);
+			httpclient.getParams().setParameter("http.socket.timeout",10000);
+
+			httpclient.getParams().setParameter("http.connection.timeout",10000);
+
+			httpclient.getParams().setParameter("http.connection-manager.timeout",10000);
 		}
 
 		return httpclient;
@@ -214,6 +235,10 @@ public class Fetcher {
 			if(ptry>1)
 			{
 				fetch_type=2;
+			}
+			if(ptry>10)
+			{
+				break;
 			}
 		}
 		
