@@ -121,7 +121,7 @@ public class CommentList {
 	
 	public static void main(String[] args) throws Exception
 	{
-		String prefix="http://book.douban.com/subject/1006670/comments/hot?p=";
+		String prefix="http://book.douban.com/subject/1006784/comments/hot?p=";
 		String suffix="";
 		int increment=1;
 		int current=0;	
