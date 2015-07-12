@@ -257,6 +257,13 @@ public class Fetcher {
 				System.out.println("success:" + success);
 			}
 		}
+		
+		if(asuccess>5000)
+		{
+			asuccess=0;
+			success=0;
+			banProxy = new HashMap<Integer, String>();
+		}
 		// System.err.println("content:"+content);
 
 		return content;
