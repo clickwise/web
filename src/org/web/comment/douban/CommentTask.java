@@ -56,7 +56,7 @@ public class CommentTask {
 							increment, current);
 					List<String> list = null;
 					while (true) {
-						Thread.sleep(3000);
+						Thread.sleep(200);
 						try {
 							list = clist.getCommentList(clist.nextPage());
 							if(list==null)
@@ -77,12 +77,12 @@ public class CommentTask {
 							}
 						
 						} catch (Exception e) {
-							Thread.sleep(6000 * 10);
+							//Thread.sleep(6000 * 10);
 						}
 					}
 
 				} catch (Exception e) {
-					Thread.sleep(6000 * 10);
+					//Thread.sleep(6000 * 10);
 				}
 			}
 

@@ -29,8 +29,17 @@ public class Fetcher {
 	public static String getSource(String url, boolean useProxy) {
 		String source = "";
 		HttpClient httpclient = new DefaultHttpClient();
-
+		String[] proxy_hosts = { "122.72.111.98",
+				 "122.72.76.132", "122.72.11.129", "122.72.11.130", "122.72.11.131",
+				  "122.72.11.132", "122.72.99.2", "122.72.99.3", "122.72.99.4",
+				 "122.72.99.8" };
+		double ran=Math.random();
+		int rani = -1; 
+		rani = (int) (ran * 10);
+		System.out.println("rani:"+rani);
+		/*
 		if (useProxy == true) {
+			
 			double ran = Math.random();
 			String[] proxy_hosts = { "122.72.111.98", "122.72.99.4","127.0.0.1" };
 
@@ -38,7 +47,8 @@ public class Fetcher {
 			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
 					proxy);
 		}
-
+		*/
+        httpclient.getParams().setParameter("X-Forwarded-For", proxy_hosts[rani]);
 		httpclient
 				.getParams()
 				.setParameter("Accept",
@@ -90,7 +100,7 @@ public class Fetcher {
 		Fetcher fetcher = new Fetcher();
 
 		System.out.println(Fetcher.getSource(
-				"http://book.douban.com/subject/25930036/comments/hot?p=2",
+				"http://book.douban.com/subject/1006666/comments/hot",
 				false));
 	}
 }

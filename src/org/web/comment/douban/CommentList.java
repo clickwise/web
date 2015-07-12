@@ -71,17 +71,26 @@ public class CommentList {
 	
 		//System.out.println(doc.html());
 		Elements tots=doc.getElementsByAttributeValue("id", "total-comments");
+		if(tots==null||tots.size()<1||tots.first().text()==null)
+		{
+			return null;
+		}
+		
+		//System.out.println(tots.first());
 		tot=Integer.parseInt(tots.first().text().replaceFirst("全部共", "").replaceAll("条", "").trim());
+		
 	    System.out.println("tot1:"+tot);
-	    tot=(int)((double)tot/(double)20);
+	    tot=(int)((double)tot/(double)20)+1;
+	    System.out.println("tot2:"+tot);
+	    System.out.println("current:"+current);
 		if(current>tot)
 		{
 			return null;
 		}
-		System.out.println("tot2:"+tot);
+		System.out.println("tot3:"+tot);
 
 		Elements links=doc.getElementsByClass("comment-item");
-        
+		//Elements links=doc.getElementsByAttributeValue("class", "comment-item");
 		int index=0;
 		
 		String cstar="";
@@ -89,7 +98,7 @@ public class CommentList {
 		for(Element link:links)
         {
         	index++;
-        	
+        	//System.out.println(link.outerHtml());
         	//star
         	Elements stars=link.getElementsByClass("comment-info").first().getElementsByTag("span");
         	cstar="";
@@ -112,7 +121,7 @@ public class CommentList {
 	
 	public static void main(String[] args) throws Exception
 	{
-		String prefix="http://book.douban.com/subject/20275657/comments/hot?p=";
+		String prefix="http://book.douban.com/subject/1006670/comments/hot?p=";
 		String suffix="";
 		int increment=1;
 		int current=0;	
