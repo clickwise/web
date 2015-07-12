@@ -37,7 +37,7 @@ public class Fetcher {
 
 	public static HashMap<Integer, String> banProxy = new HashMap<Integer, String>();
 
-	public static int timeout = 1300;
+	public static int timeout = 1500;
 
 	public static int success = 0;
 	public static int asuccess = 0;
