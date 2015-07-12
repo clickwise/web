@@ -67,9 +67,9 @@ public class CommentList {
 		ArrayList<String> commentList=new ArrayList<String>();
 		
 		Document doc = null;
-		doc = Jsoup.parse(Fetcher.getSource(url, false));
+		doc = Jsoup.parse(Fetcher.getSource(url));
 	
-		//System.out.println(doc.html());
+		System.out.println(doc.html());
 		Elements tots=doc.getElementsByAttributeValue("id", "total-comments");
 		if(tots==null||tots.size()<1||tots.first().text()==null)
 		{
@@ -121,17 +121,17 @@ public class CommentList {
 	
 	public static void main(String[] args) throws Exception
 	{
-		String prefix="http://book.douban.com/subject/1006784/comments/hot?p=";
+		String prefix="http://book.douban.com/subject/1007535/comments/hot";
 		String suffix="";
 		int increment=1;
 		int current=0;	
 		CommentList clist=new CommentList(prefix,suffix,increment,current);
 	 
 		List<String> list=clist.getCommentList(clist.nextPage());
-		for(String book:list)
-		{
-		  System.out.println(book);	
-		}
+		//for(String book:list)
+		//{
+		  //System.out.println(book);	
+		//}
 		
 		
 	}

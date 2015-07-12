@@ -1,9 +1,12 @@
 package org.jsoup.fetcher;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,32 +25,58 @@ import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import cn.clickwise.lib.string.SSO;
+
 public class Fetcher {
 
-	public static int pindex = 1;
-
+	public static int fetch_type = 1;
+	
+	public static ArrayList<String> proxyList;
+	
+	public static int rani = 1;
+	
+	public static HashMap<Integer,String> banProxy=new HashMap<Integer,String>();
+	
+	public static void loadProxyHosts(String proxy)
+	{
+		try{
+			BufferedReader br=new BufferedReader(new FileReader(proxy));
+			String line="";
+			proxyList=new ArrayList<String>();
+			String[] tokens=null;
+			while((line=br.readLine())!=null)
+			{
+				if(SSO.tioe(line))
+				{
+					continue;
+				}
+				
+				line=line.trim();
+				tokens=line.split("\\s+");
+				if(tokens.length<2)
+				{
+					continue;
+				}
+				
+				proxyList.add(tokens[0]+":"+tokens[1]);
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
 	public static HttpClient getHttpClient(int type) {
 		HttpClient httpclient = new DefaultHttpClient();
-		if (type == 0) {
-			/*
-			 * String[] proxy_hosts = { "122.72.111.98", "122.72.76.132",
-			 * "122.72.11.129", "122.72.11.130", "122.72.11.131",
-			 * "122.72.11.132", "122.72.99.2", "122.72.99.3", "122.72.99.4",
-			 * "122.72.99.8" }; double ran = Math.random(); int rani = -1; rani
-			 * = (int) (ran * 10); System.out.println("rani:" + rani);
-			 */
-			
-			double ran = Math.random();
-			String[] proxy_hosts = {  "219.142.192.196:199",
-					"123.125.104.240:80" ,"210.75.240.62:3128","202.106.169.142:80","120.197.234.164:80","114.242.166.216:8080",
-					"202.108.35.151:80","121.69.8.234:8080","182.92.104.79:3128","117.79.131.109:8080","118.186.239.247:80","124.65.163.10:8080","211.89.233.6:80","117.170.218.189:8123"};
-
-			int rani = -1;
-			rani = (int) (ran * proxy_hosts.length);
+		if (type == 0) {//chrome
+			getRandomPrxoy();
 			//rani=13;
-			System.out.println("rani:" + rani+" "+proxy_hosts[rani]);
-			HttpHost proxy = new HttpHost(proxy_hosts[pindex].split(":")[0],
-					Integer.parseInt(proxy_hosts[pindex].split(":")[1]), "http");
+			System.out.println("rani:" + rani+" "+proxyList.get(rani));
+			HttpHost proxy = new HttpHost(proxyList.get(rani).split(":")[0],
+					Integer.parseInt(proxyList.get(rani).split(":")[1]), "http");
 			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
 					proxy);
 
@@ -74,29 +103,39 @@ public class Fetcher {
 					.setParameter(
 							"User-Agent:",
 							"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36");
-		} else if (type == 1) {
-			String[] proxy_hosts = { "122.72.111.98", "122.72.76.132",
-					"122.72.11.129", "122.72.11.130", "122.72.11.131",
-					"122.72.11.132", "122.72.99.2", "122.72.99.3",
-					"122.72.99.4", "122.72.99.8" };
-			double ran = Math.random();
-			int rani = -1;
-			rani = (int) (ran * 10);
-			System.out.println("rani:" + rani);
-			/*
-			 * if (useProxy == true) {
-			 * 
-			 * double ran = Math.random(); String[] proxy_hosts = {
-			 * "122.72.111.98", "122.72.99.4","127.0.0.1" };
-			 * 
-			 * HttpHost proxy = new HttpHost(proxy_hosts[pindex], 8080, "http");
-			 * httpclient
-			 * .getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-			 * }
-			 */
+		} else if (type == 1) {//firefox
+			getRandomPrxoy();
+			//rani=13;
+			System.out.println("rani:" + rani+" "+proxyList.get(rani));
+			HttpHost proxy = new HttpHost(proxyList.get(rani).split(":")[0],
+					Integer.parseInt(proxyList.get(rani).split(":")[1]), "http");
+			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
+					proxy);
+
 
 			// httpclient.getParams().setParameter("X-Forwarded-For",
 			// proxy_hosts[rani]);
+			httpclient
+					.getParams()
+					.setParameter("Accept",
+							"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+			httpclient.getParams().setParameter("Accept-Encoding",
+					"gzip, deflate");
+			httpclient.getParams().setParameter("Accept-Language",
+					"zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3");
+			httpclient.getParams().setParameter("Connection", "keep-alive");
+			httpclient
+					.getParams()
+					.setParameter(
+							"Cookie",
+							"bid=\"G/ExAwzwcQ0\"; viewed=\"10000832_1000039_1000019\"; __utma=30149280.680644343.1436643732.1436664809.1436668923.3; __utmz=30149280.1436643732.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); __utma=81379588.1924417685.1436643732.1436664809.1436668923.3; __utmz=81379588.1436643732.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _pk_id.100001.3ac3=350b6bba6f38d085.1436643732.3.1436668923.1436664809.; ct=y; _pk_ses.100001.3ac3=*; __utmb=30149280.1.10.1436668923; __utmc=30149280; __utmt_douban=1; __utmb=81379588.1.10.1436668923; __utmc=81379588; __utmt=1");
+			httpclient.getParams().setParameter("Host:book", "book.douban.com");
+			httpclient
+					.getParams()
+					.setParameter("User-Agent:",
+							"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0");
+		}else if(type == 2)//no proxy
+		{
 			httpclient
 					.getParams()
 					.setParameter("Accept",
@@ -121,7 +160,7 @@ public class Fetcher {
 		return httpclient;
 	}
 
-	public static String getSource(String url, boolean useProxy) {
+	public static String getSource(String url) {
 		String source = "";
 
 		String con = "";
@@ -129,7 +168,7 @@ public class Fetcher {
 		try {
 			HttpGet httpget = new HttpGet(url);
 
-			HttpResponse response = getHttpClient(0).execute(httpget);
+			HttpResponse response = getHttpClient(fetch_type).execute(httpget);
 			HttpEntity entity = response.getEntity();
 
 			String content = "";
@@ -142,17 +181,53 @@ public class Fetcher {
 			source = content;
 
 		} catch (Exception e) {
+			banProxy.put(rani, proxyList.get(rani));
 			System.err.println(e.getMessage());
+			
 		}
 		return source;
+	}
+	
+	public static void getRandomPrxoy()
+	{
+        double ran=Math.random();
+		rani = (int) (ran * proxyList.size());	
+		while(banProxy.containsKey(rani))
+		{
+			ran=Math.random();
+			rani = (int) (ran * proxyList.size());	
+		}
+	}
+	
+	public static String getSourceEnsure(String url)
+	{
+		String content="";
+		
+		content=getSource(url);
+		
+		int ptry=0;
+		fetch_type=1;
+		while(content.indexOf("短评")<0)
+		{
+			ptry++;
+			content=getSource(url);
+			if(ptry>10)
+			{
+				fetch_type=2;
+			}
+		}
+		
+		System.err.println("content:"+content);
+		
+		return content;
 	}
 
 	public static void main(String[] args) {
 		String url = "";
 		String word = "电视剧";
 		Fetcher fetcher = new Fetcher();
-
-		System.out.println(Fetcher.getSource(
-				"http://book.douban.com/subject/1006666/comments/hot", false));
+        Fetcher.loadProxyHosts("p.txt");
+		System.out.println(Fetcher.getSourceEnsure(
+				"http://book.douban.com/subject/1006666/comments/hot"));
 	}
 }
