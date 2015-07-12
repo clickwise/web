@@ -30,53 +30,49 @@ import cn.clickwise.lib.string.SSO;
 public class Fetcher {
 
 	public static int fetch_type = 1;
-	
+
 	public static ArrayList<String> proxyList;
-	
+
 	public static int rani = 1;
-	
-	public static HashMap<Integer,String> banProxy=new HashMap<Integer,String>();
-	
-	public static int timeout=1500;
-	
-	public static void loadProxyHosts(String proxy)
-	{
-		try{
-			BufferedReader br=new BufferedReader(new FileReader(proxy));
-			String line="";
-			proxyList=new ArrayList<String>();
-			String[] tokens=null;
-			while((line=br.readLine())!=null)
-			{
-				if(SSO.tioe(line))
-				{
+
+	public static HashMap<Integer, String> banProxy = new HashMap<Integer, String>();
+
+	public static int timeout = 1000;
+
+	public static int success = 0;
+	public static int asuccess = 0;
+
+	public static void loadProxyHosts(String proxy) {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(proxy));
+			String line = "";
+			proxyList = new ArrayList<String>();
+			String[] tokens = null;
+			while ((line = br.readLine()) != null) {
+				if (SSO.tioe(line)) {
 					continue;
 				}
-				
-				line=line.trim();
-				tokens=line.split("\\s+");
-				if(tokens.length<2)
-				{
+
+				line = line.trim();
+				tokens = line.split("\\s+");
+				if (tokens.length < 2) {
 					continue;
 				}
-				
-				proxyList.add(tokens[0]+":"+tokens[1]);
+
+				proxyList.add(tokens[0] + ":" + tokens[1]);
 			}
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-	
+
 	public static HttpClient getHttpClient(int type) {
 		HttpClient httpclient = new DefaultHttpClient();
-		if (type == 0) {//chrome
+		if (type == 0) {// chrome
 			getRandomPrxoy();
-			//rani=13;
-			System.out.println("rani:" + rani+" "+proxyList.get(rani));
+			// rani=13;
+			System.out.println("rani:" + rani + " " + proxyList.get(rani));
 			HttpHost proxy = new HttpHost(proxyList.get(rani).split(":")[0],
 					Integer.parseInt(proxyList.get(rani).split(":")[1]), "http");
 			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
@@ -105,22 +101,25 @@ public class Fetcher {
 					.setParameter(
 							"User-Agent:",
 							"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36");
-			httpclient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,  timeout);//连接时间20s
-			httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,  timeout);
-			httpclient.getParams().setParameter("http.socket.timeout",timeout);
+			httpclient.getParams().setParameter(
+					CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);// 连接时间20s
+			httpclient.getParams().setParameter(
+					CoreConnectionPNames.SO_TIMEOUT, timeout);
+			httpclient.getParams().setParameter("http.socket.timeout", timeout);
 
-			httpclient.getParams().setParameter("http.connection.timeout",timeout);
+			httpclient.getParams().setParameter("http.connection.timeout",
+					timeout);
 
-			httpclient.getParams().setParameter("http.connection-manager.timeout",timeout);
-		} else if (type == 1) {//firefox
+			httpclient.getParams().setParameter(
+					"http.connection-manager.timeout", timeout);
+		} else if (type == 1) {// firefox
 			getRandomPrxoy();
-			//rani=13;
-			System.out.println("rani:" + rani+" "+proxyList.get(rani));
+			// rani=13;
+			System.out.println("rani:" + rani + " " + proxyList.get(rani));
 			HttpHost proxy = new HttpHost(proxyList.get(rani).split(":")[0],
 					Integer.parseInt(proxyList.get(rani).split(":")[1]), "http");
 			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
 					proxy);
-
 
 			// httpclient.getParams().setParameter("X-Forwarded-For",
 			// proxy_hosts[rani]);
@@ -143,14 +142,18 @@ public class Fetcher {
 					.getParams()
 					.setParameter("User-Agent:",
 							"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0");
-			httpclient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,  timeout);//连接时间20s
-			httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,  timeout);
-			httpclient.getParams().setParameter("http.socket.timeout",timeout);
+			httpclient.getParams().setParameter(
+					CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);// 连接时间20s
+			httpclient.getParams().setParameter(
+					CoreConnectionPNames.SO_TIMEOUT, timeout);
+			httpclient.getParams().setParameter("http.socket.timeout", timeout);
 
-			httpclient.getParams().setParameter("http.connection.timeout",timeout);
+			httpclient.getParams().setParameter("http.connection.timeout",
+					timeout);
 
-			httpclient.getParams().setParameter("http.connection-manager.timeout",timeout);
-		}else if(type == 2)//no proxy
+			httpclient.getParams().setParameter(
+					"http.connection-manager.timeout", timeout);
+		} else if (type == 2)// no proxy
 		{
 			httpclient
 					.getParams()
@@ -171,13 +174,17 @@ public class Fetcher {
 					.getParams()
 					.setParameter("User-Agent:",
 							"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0");
-			httpclient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);//连接时间20s
-			httpclient.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT,  timeout);
-			httpclient.getParams().setParameter("http.socket.timeout",timeout);
+			httpclient.getParams().setParameter(
+					CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);// 连接时间20s
+			httpclient.getParams().setParameter(
+					CoreConnectionPNames.SO_TIMEOUT, timeout);
+			httpclient.getParams().setParameter("http.socket.timeout", timeout);
 
-			httpclient.getParams().setParameter("http.connection.timeout",timeout);
+			httpclient.getParams().setParameter("http.connection.timeout",
+					timeout);
 
-			httpclient.getParams().setParameter("http.connection-manager.timeout",timeout);
+			httpclient.getParams().setParameter(
+					"http.connection-manager.timeout", timeout);
 		}
 
 		return httpclient;
@@ -206,46 +213,52 @@ public class Fetcher {
 		} catch (Exception e) {
 			banProxy.put(rani, proxyList.get(rani));
 			System.err.println(e.getMessage());
-			
+
 		}
 		return source;
 	}
-	
-	public static void getRandomPrxoy()
-	{
-        double ran=Math.random();
-		rani = (int) (ran * proxyList.size());	
-		while(banProxy.containsKey(rani))
-		{
-			ran=Math.random();
-			rani = (int) (ran * proxyList.size());	
+
+	public static void getRandomPrxoy() {
+		double ran = Math.random();
+		rani = (int) (ran * proxyList.size());
+		while (banProxy.containsKey(rani)) {
+			ran = Math.random();
+			rani = (int) (ran * proxyList.size());
 		}
 	}
-	
-	public static String getSourceEnsure(String url)
-	{
-		String content="";
-		
-		content=getSource(url);
-		
-		int ptry=0;
-		fetch_type=1;
-		while(content.indexOf("短评")<0)
-		{
+
+	public static String getSourceEnsure(String url) {
+		String content = "";
+
+		content = getSource(url);
+
+		int ptry = 0;
+
+		boolean finish = true;
+		fetch_type = 1;
+		while (content.indexOf("短评") < 0) {
 			ptry++;
-			content=getSource(url);
-			if(ptry>1)
-			{
-				fetch_type=2;
+			content = getSource(url);
+			if (ptry > 1) {
+				fetch_type = 2;
 			}
-			if(ptry>10)
-			{
+			if (ptry > 10) {
+				finish = false;
 				break;
 			}
 		}
-		
-		//System.err.println("content:"+content);
-		
+
+		if (finish == true) {
+			System.out.println("asuccess:" + asuccess);
+			asuccess++;
+
+			if (fetch_type == 1) {
+				success++;
+				System.out.println("success:" + success);
+			}
+		}
+		// System.err.println("content:"+content);
+
 		return content;
 	}
 
@@ -253,8 +266,9 @@ public class Fetcher {
 		String url = "";
 		String word = "电视剧";
 		Fetcher fetcher = new Fetcher();
-        Fetcher.loadProxyHosts("p.txt");
-		System.out.println(Fetcher.getSourceEnsure(
-				"http://book.douban.com/subject/1006666/comments/hot"));
+		Fetcher.loadProxyHosts("p.txt");
+		System.out
+				.println(Fetcher
+						.getSourceEnsure("http://book.douban.com/subject/1006666/comments/hot"));
 	}
 }

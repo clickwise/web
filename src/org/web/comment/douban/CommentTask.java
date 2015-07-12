@@ -38,7 +38,7 @@ public class CommentTask {
 			PrintWriter pw = new PrintWriter(new FileWriter(output, true));
 
 			int index = 0;
-			Fetcher.loadProxyHosts("p.txt");
+			Fetcher.loadProxyHosts("p22.txt");
 			while ((bookLink = br.readLine()) != null) {
 
 				try {
