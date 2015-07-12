@@ -97,7 +97,7 @@ public class CommentTask {
 
 	public static void main(String[] args) {
 		CommentTask task = new CommentTask();
-		task.getAllCommentList("output/douban/booklist_uniq.txt",
+		task.getAllCommentList("output/douban/booklist_uniq1.txt",
 				"output/douban/commentlist.txt");
 
 	}
