@@ -67,9 +67,9 @@ public class CommentList {
 		ArrayList<String> commentList=new ArrayList<String>();
 		
 		Document doc = null;
-		doc = Jsoup.parse(Fetcher.getSource(url));
+		doc = Jsoup.parse(Fetcher.getSourceEnsure(url));
 	
-		System.out.println(doc.html());
+		//System.out.println(doc.html());
 		Elements tots=doc.getElementsByAttributeValue("id", "total-comments");
 		if(tots==null||tots.size()<1||tots.first().text()==null)
 		{

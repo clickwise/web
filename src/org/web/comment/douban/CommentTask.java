@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.List;
 
+import org.jsoup.fetcher.Fetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,7 @@ public class CommentTask {
 			PrintWriter pw = new PrintWriter(new FileWriter(output, true));
 
 			int index = 0;
-
+			Fetcher.loadProxyHosts("p.txt");
 			while ((bookLink = br.readLine()) != null) {
 
 				try {

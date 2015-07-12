@@ -211,13 +211,13 @@ public class Fetcher {
 		{
 			ptry++;
 			content=getSource(url);
-			if(ptry>10)
+			if(ptry>1)
 			{
 				fetch_type=2;
 			}
 		}
 		
-		System.err.println("content:"+content);
+		//System.err.println("content:"+content);
 		
 		return content;
 	}
