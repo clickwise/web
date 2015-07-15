@@ -112,11 +112,7 @@ public class CommentTask {
 
 			int count=0;
 			while ((bookLink = br.readLine()) != null) {
-				count++;
-				if(count>50)
-				{
-					break;
-				}
+	
 				try {
 					System.out.println("crawl book " + bookLink);
 					logger.info("crawl book " + bookLink);
