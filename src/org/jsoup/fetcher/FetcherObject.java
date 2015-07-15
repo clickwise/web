@@ -2,32 +2,22 @@ package org.jsoup.fetcher;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.util.EntityUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import cn.clickwise.lib.string.SSO;
 
-public class Fetcher {
+public class FetcherObject {
 
 	public static int fetch_type = 1;
 
@@ -42,7 +32,7 @@ public class Fetcher {
 	public static int success = 0;
 	public static int asuccess = 0;
 
-	public static void loadProxyHosts(String proxy) {
+	public  void loadProxyHosts(String proxy) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(proxy));
 			String line = "";
@@ -67,7 +57,7 @@ public class Fetcher {
 
 	}
 
-	public static HttpClient getHttpClient(int type) {
+	public  HttpClient getHttpClient(int type) {
 		HttpClient httpclient = new DefaultHttpClient();
 		if (type == 0) {// chrome
 			getRandomPrxoy();
@@ -190,7 +180,7 @@ public class Fetcher {
 		return httpclient;
 	}
 
-	public static String getSource(String url) {
+	public String getSource(String url) {
 		String source = "";
 
 		String con = "";
@@ -218,7 +208,7 @@ public class Fetcher {
 		return source;
 	}
 
-	public static void getRandomPrxoy() {
+	public  void getRandomPrxoy() {
 		double ran = Math.random();
 		rani = (int) (ran * proxyList.size());
 		while (banProxy.containsKey(rani)) {
@@ -227,7 +217,7 @@ public class Fetcher {
 		}
 	}
 
-	public static String getSourceEnsure(String url) {
+	public String getSourceEnsure(String url) {
 		String content = "";
 
 		content = getSource(url);
@@ -249,6 +239,7 @@ public class Fetcher {
 		}
 
 		if (finish == true) {
+			System.out.println("urlc:"+url);
 			System.out.println("asuccess:" + asuccess);
 			asuccess++;
 
@@ -273,10 +264,9 @@ public class Fetcher {
 	public static void main(String[] args) {
 		String url = "";
 		String word = "电视剧";
-		Fetcher fetcher = new Fetcher();
-		Fetcher.loadProxyHosts("p.txt");
+		FetcherObject fetcher = new FetcherObject();
+		fetcher.loadProxyHosts("p.txt");
 		System.out
-				.println(Fetcher
-						.getSourceEnsure("http://book.douban.com/subject/1006666/comments/hot"));
+				.println(fetcher.getSourceEnsure("http://book.douban.com/subject/1006666/comments/hot"));
 	}
 }

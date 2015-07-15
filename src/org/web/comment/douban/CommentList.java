@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import org.jsoup.Jsoup;
 import org.jsoup.fetcher.Fetcher;
+import org.jsoup.fetcher.FetcherObject;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -29,6 +30,8 @@ public class CommentList {
 	public int top=2;
 	
 	public int tot=0;
+	
+	public FetcherObject fetcher=null;
 	
 	public CommentList (String prefix,String suffix,int increment,int current)
 	{
@@ -98,7 +101,7 @@ public class CommentList {
 		for(Element link:links)
         {
         	index++;
-        	//System.out.println(link.outerHtml());
+        	System.out.println(link.outerHtml());
         	//star
         	Elements stars=link.getElementsByClass("comment-info").first().getElementsByTag("span");
         	cstar="";
@@ -117,6 +120,61 @@ public class CommentList {
 		return commentList;
 	}
 	
+	public List<String> getCommentListFromContent(String content) throws Exception
+	{
+		//System.out.println("crawling "+url);
+		ArrayList<String> commentList=new ArrayList<String>();
+		
+		Document doc = null;
+		doc = Jsoup.parse(content);
+	
+		//System.out.println(doc.html());
+		Elements tots=doc.getElementsByAttributeValue("id", "total-comments");
+		if(tots==null||tots.size()<1||tots.first().text()==null)
+		{
+			return null;
+		}
+		
+		//System.out.println(tots.first());
+		tot=Integer.parseInt(tots.first().text().replaceFirst("全部共", "").replaceAll("条", "").trim());
+		
+	    System.out.println("tot1:"+tot);
+	    tot=(int)((double)tot/(double)20)+1;
+	    System.out.println("tot2:"+tot);
+	    System.out.println("current:"+current);
+		if(current>tot)
+		{
+			return null;
+		}
+		System.out.println("tot3:"+tot);
+
+		Elements links=doc.getElementsByClass("comment-item");
+		//Elements links=doc.getElementsByAttributeValue("class", "comment-item");
+		int index=0;
+		
+		String cstar="";
+		String comment="";
+		for(Element link:links)
+        {
+        	index++;
+        	//System.out.println(link.outerHtml());
+        	//star
+        	Elements stars=link.getElementsByClass("comment-info").first().getElementsByTag("span");
+        	cstar="";
+        	for(Element star:stars)
+        	{
+        	 if(star.outerHtml().indexOf("user-stars")>-1)
+              cstar=star.attr("class");
+        	}
+        	
+        	//comment
+        	comment=link.getElementsByClass("comment-content").first().text();
+        	
+        	commentList.add(cstar+"\001"+comment);
+        	
+        }
+		return commentList;
+	}
 	
 	
 	public static void main(String[] args) throws Exception

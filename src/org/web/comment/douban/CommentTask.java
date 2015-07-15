@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import org.jsoup.fetcher.Fetcher;
+import org.jsoup.pond.QueueUrlPond;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,6 +97,45 @@ public class CommentTask {
 		}
 	}
 
+	
+	public void getAllCommentListMul(String main_list, String output) {
+		try {
+
+			String bookLink = "";
+			BufferedReader br = new BufferedReader(new FileReader(main_list));
+			PrintWriter pw = new PrintWriter(new FileWriter(output, true));
+
+			int index = 0;
+			
+			QueueUrlPond qud = new QueueUrlPond();
+			qud.startConsume(3);
+
+			int count=0;
+			while ((bookLink = br.readLine()) != null) {
+				count++;
+				if(count>50)
+				{
+					break;
+				}
+				try {
+					System.out.println("crawl book " + bookLink);
+					logger.info("crawl book " + bookLink);
+					qud.add2Pond(bookLink);
+					qud.incrCount();
+					
+				} catch (Exception e) {
+					//Thread.sleep(6000 * 10);
+				}
+			}
+
+			pw.close();
+			br.close();
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+	}
+	
 	public static void main(String[] args) {
 		
 		if(args.length!=1)
@@ -109,7 +149,7 @@ public class CommentTask {
 		
 		if(role==0)
 		{
-		task.getAllCommentList("output/douban/booklist_uniq.txt",
+		task.getAllCommentListMul("output/douban/booklist_uniq.txt",
 				"output/douban/commentlist.txt");
 		}
 		else if(role==1)
