@@ -12,7 +12,7 @@
     <property name="src.dir" value="src"/>
     <property name="classes.dir" value="bin"/>
     <property name="output.dir" value="out"/>
-    <property name="jarname" value="web.jar"/>
+    <property name="jarname" value="hive-exec-0.10.1.jar"/>
     <!-- 第三方jar包的路径 -->
     <path id="lib-classpath">
         <fileset dir="${lib.dir}">
