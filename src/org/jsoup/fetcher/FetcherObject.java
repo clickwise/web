@@ -62,7 +62,7 @@ public class FetcherObject {
 		if (type == 0) {// chrome
 			getRandomPrxoy();
 			// rani=13;
-			System.out.println("rani:" + rani + " " + proxyList.get(rani));
+			//System.out.println("rani:" + rani + " " + proxyList.get(rani));
 			HttpHost proxy = new HttpHost(proxyList.get(rani).split(":")[0],
 					Integer.parseInt(proxyList.get(rani).split(":")[1]), "http");
 			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
@@ -105,7 +105,7 @@ public class FetcherObject {
 		} else if (type == 1) {// firefox
 			getRandomPrxoy();
 			// rani=13;
-			System.out.println("rani:" + rani + " " + proxyList.get(rani));
+			//System.out.println("rani:" + rani + " " + proxyList.get(rani));
 			HttpHost proxy = new HttpHost(proxyList.get(rani).split(":")[0],
 					Integer.parseInt(proxyList.get(rani).split(":")[1]), "http");
 			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
@@ -239,13 +239,13 @@ public class FetcherObject {
 		}
 
 		if (finish == true) {
-			System.out.println("urlc:"+url);
-			System.out.println("asuccess:" + asuccess);
+			//System.out.println("urlc:"+url);
+			//System.out.println("asuccess:" + asuccess);
 			asuccess++;
 
 			if (fetch_type == 1) {
 				success++;
-				System.out.println("success:" + success);
+				//System.out.println("success:" + success);
 			}
 		}
 		

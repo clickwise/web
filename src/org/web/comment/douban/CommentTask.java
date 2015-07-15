@@ -40,7 +40,7 @@ public class CommentTask {
 
 			int index = 0;
 			Fetcher.loadProxyHosts("p.txt");
-			System.out.println("proxy num:"+Fetcher.proxyList.size());
+			//System.out.println("proxy num:"+Fetcher.proxyList.size());
 			while ((bookLink = br.readLine()) != null) {
 
 				try {
@@ -114,8 +114,8 @@ public class CommentTask {
 			while ((bookLink = br.readLine()) != null) {
 	
 				try {
-					System.out.println("crawl book " + bookLink);
-					logger.info("crawl book " + bookLink);
+					//System.out.println("crawl book " + bookLink);
+					//logger.info("crawl book " + bookLink);
 					qud.add2Pond(bookLink);
 					qud.incrCount();
 					

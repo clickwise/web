@@ -133,7 +133,7 @@ public class QueueUrlPond extends UrlPond {
  
 					url = pollFromPond();
 				
-                    System.out.println(Thread.currentThread().getName()+" fetch url :"+url);
+                    //System.out.println(Thread.currentThread().getName()+" fetch url :"+url);
 					if (SSO.tioe(url)) {
 						Thread.sleep((long) (1000 ));
 						continue;

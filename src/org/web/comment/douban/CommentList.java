@@ -66,7 +66,7 @@ public class CommentList {
 	
 	public List<String> getCommentList(String url) throws Exception
 	{
-		System.out.println("crawling "+url);
+		//System.out.println("crawling "+url);
 		ArrayList<String> commentList=new ArrayList<String>();
 		
 		Document doc = null;
@@ -82,15 +82,15 @@ public class CommentList {
 		//System.out.println(tots.first());
 		tot=Integer.parseInt(tots.first().text().replaceFirst("全部共", "").replaceAll("条", "").trim());
 		
-	    System.out.println("tot1:"+tot);
+	    //System.out.println("tot1:"+tot);
 	    tot=(int)((double)tot/(double)20)+1;
-	    System.out.println("tot2:"+tot);
-	    System.out.println("current:"+current);
+	   // System.out.println("tot2:"+tot);
+	   // System.out.println("current:"+current);
 		if(current>tot)
 		{
 			return null;
 		}
-		System.out.println("tot3:"+tot);
+		//System.out.println("tot3:"+tot);
 
 		Elements links=doc.getElementsByClass("comment-item");
 		//Elements links=doc.getElementsByAttributeValue("class", "comment-item");
@@ -101,7 +101,7 @@ public class CommentList {
 		for(Element link:links)
         {
         	index++;
-        	System.out.println(link.outerHtml());
+        	//System.out.println(link.outerHtml());
         	//star
         	Elements stars=link.getElementsByClass("comment-info").first().getElementsByTag("span");
         	cstar="";
@@ -138,15 +138,15 @@ public class CommentList {
 		//System.out.println(tots.first());
 		tot=Integer.parseInt(tots.first().text().replaceFirst("全部共", "").replaceAll("条", "").trim());
 		
-	    System.out.println("tot1:"+tot);
+	    //System.out.println("tot1:"+tot);
 	    tot=(int)((double)tot/(double)20)+1;
-	    System.out.println("tot2:"+tot);
-	    System.out.println("current:"+current);
+	    //System.out.println("tot2:"+tot);
+	   // System.out.println("current:"+current);
 		if(current>tot)
 		{
 			return null;
 		}
-		System.out.println("tot3:"+tot);
+		//System.out.println("tot3:"+tot);
 
 		Elements links=doc.getElementsByClass("comment-item");
 		//Elements links=doc.getElementsByAttributeValue("class", "comment-item");
