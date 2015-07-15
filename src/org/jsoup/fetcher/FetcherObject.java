@@ -229,7 +229,7 @@ public class FetcherObject {
 		while (content.indexOf("短评") < 0) {
 			ptry++;
 			content = getSource(url);
-			if (ptry > 7) {
+			if (ptry > 8) {
 				fetch_type = 2;
 			}
 			if (ptry > 10) {
