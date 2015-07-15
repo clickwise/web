@@ -108,7 +108,7 @@ public class CommentTask {
 			int index = 0;
 			
 			QueueUrlPond qud = new QueueUrlPond();
-			qud.startConsume(3);
+			qud.startConsume(20);
 
 			int count=0;
 			while ((bookLink = br.readLine()) != null) {
@@ -154,12 +154,12 @@ public class CommentTask {
 		}
 		else if(role==1)
 		{
-			task.getAllCommentList("output/douban/booklist_uniq1.txt",
+			task.getAllCommentListMul("output/douban/booklist_uniq1.txt",
 					"output/douban/commentlist.txt");
 		}
 		else if(role==2)
 		{
-			task.getAllCommentList("output/douban/booklist_uniq2.txt",
+			task.getAllCommentListMul("output/douban/booklist_uniq2.txt",
 					"output/douban/commentlist.txt");
 		}
 	}
