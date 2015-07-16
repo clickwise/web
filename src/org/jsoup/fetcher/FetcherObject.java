@@ -249,7 +249,7 @@ public class FetcherObject {
 			}
 		}
 		
-		int half=(int)((double)proxyList.size()/(double)3);
+		int half=(int)((double)proxyList.size()/(double)2);
 		if(asuccess>5000||banProxy.size()>half)
 		{
 			asuccess=0;
