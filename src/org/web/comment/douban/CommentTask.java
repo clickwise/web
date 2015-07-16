@@ -108,7 +108,7 @@ public class CommentTask {
 			int index = 0;
 			
 			QueueUrlPond qud = new QueueUrlPond();
-			qud.startConsume(30);
+			qud.startConsume(20);
 
 			int count=0;
 			while ((bookLink = br.readLine()) != null) {
