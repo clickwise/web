@@ -229,10 +229,10 @@ public class FetcherObject {
 		while (content.indexOf("短评") < 0) {
 			ptry++;
 			content = getSource(url);
-			if (ptry > 7) {
+			if (ptry > 3) {
 				fetch_type = 2;
 			}
-			if (ptry > 20) {
+			if (ptry > 10) {
 				finish = false;
 				break;
 			}
@@ -249,7 +249,7 @@ public class FetcherObject {
 			}
 		}
 		
-		int half=(int)((double)proxyList.size()/(double)2);
+		int half=(int)((double)proxyList.size()/(double)3);
 		if(asuccess>5000||banProxy.size()>half)
 		{
 			asuccess=0;
