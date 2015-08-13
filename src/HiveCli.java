@@ -1,9 +1,11 @@
 import org.web.comment.douban.CommentTask;
+import org.web.sites.DianPing;
 
 
 public class HiveCli {
 public static void main(String[] args) {
 		
+	/*
 		if(args.length!=1)
 		{
 			System.err.println("Usage:<role>");
@@ -27,6 +29,13 @@ public static void main(String[] args) {
 		{
 			task.getAllCommentListMul("output/douban/booklist_uniq2.txt",
 					"output/douban/commentlist.txt");
-		}
+		}*/
+	
+	DianPing dp = new DianPing();
+	// dp.getList("master/slaves/dianping/route.txt",
+	// "master/slaves/dianping/list.txt");
+	dp.getEnities("master/slaves/dianping/list.txt",
+			"master/slaves/dianping/entity.txt");
 	}
+	
 }

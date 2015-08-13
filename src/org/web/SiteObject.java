@@ -27,13 +27,6 @@ public abstract class SiteObject {
 	public abstract Entity last();
 	
 	/**
-	 * parse the entity and get all required result
-	 * @param entity
-	 * @return
-	 */
-	public abstract List<String> parse(Entity entity);
-	
-	/**
 	 * update the progress into the storing directory
 	 */
 	public abstract void save();
