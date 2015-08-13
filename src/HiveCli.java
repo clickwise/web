@@ -34,8 +34,8 @@ public static void main(String[] args) {
 	DianPing dp = new DianPing();
 	// dp.getList("master/slaves/dianping/route.txt",
 	// "master/slaves/dianping/list.txt");
-	dp.getEnities("master/slaves/dianping/list.txt",
-			"master/slaves/dianping/entity.txt");
+	////dp.getEnities("master/slaves/dianping/list.txt",
+		////	"master/slaves/dianping/entity.txt");
 	}
 	
 }
