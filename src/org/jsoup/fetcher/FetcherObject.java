@@ -19,7 +19,7 @@ import cn.clickwise.lib.string.SSO;
 
 public class FetcherObject {
 
-	public static int fetch_type = 1;
+	public static int fetch_type = 2;
 
 	public static ArrayList<String> proxyList;
 

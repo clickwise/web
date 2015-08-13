@@ -3,7 +3,8 @@ package org.web;
 import java.util.List;
 
 /**
- * every site object instance has a directory
+ * every site object instance has a directory,
+ * every instance of SiteObject must implements its own entity
  * @author liqi6
  */
 public abstract class SiteObject {
@@ -11,7 +12,7 @@ public abstract class SiteObject {
 	/**
 	 * init the site object from the storing directory
 	 */
-	public abstract void init();
+	public abstract void init(String directory);
     
 	/**
 	 * next entity from this site

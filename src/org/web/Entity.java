@@ -1,9 +1,9 @@
 package org.web;
 
-public class Entity {
+import java.util.List;
+
+public interface  Entity {
     
-	public String title;
-	public String url;
-	public String host;
+	public abstract List<String> parse();
 	
 }
