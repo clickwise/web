@@ -83,7 +83,7 @@ public class DianPing extends SiteObject implements Entity {
 	@Override
 	public Entity next() {
 
-		if (index >= (elist.size()-1)) {
+		if (index >= (elist.size() - 1)) {
 			return null;
 		}
 
@@ -125,104 +125,197 @@ public class DianPing extends SiteObject implements Entity {
 
 	@Override
 	public List<String> parse() {
-		
-		//System.err.println("parsing:"+elist.get(objectIndex));
-		
-		List<String> comment_list=new ArrayList<String>();
-		
-		String fields=elist.get(objectIndex);
-		
-		if(fields.split("\001").length!=2)
-		{
+
+		// System.err.println("parsing:"+elist.get(objectIndex));
+
+		List<String> comment_list = new ArrayList<String>();
+
+		String fields = elist.get(objectIndex);
+
+		if (fields.split("\001").length != 2) {
 			return null;
 		}
-		String url=fields.split("\001")[0];
-		int num=Integer.parseInt(fields.split("\001")[1].replaceAll("条点评", "").trim());
-		
-		 Document doc = null;
-		 doc =Jsoup.parse(fetcher.getSource("http://"+url));
-		 
-		 //判断是否只有一页点评
-		 Elements links = doc.getElementsByTag("a");
-		
-		 Element element=null;
-		 String href="";
-		 
-		 boolean onePage=true;
-		 for(int i=0;i<links.size();i++)
-		 {
-			 element=links.get(i);
-			 href=element.attr("href");
-			 
-			 if(SSO.tioe(href))
-			 {
-				 continue;
-			 }
-			 if (Pattern.matches("/shop/\\d+/review_more", href))
-			 {
-				 onePage=false;
-				 //System.err.println(element.toString());
-			 }
-			 
-		 }
-		 
-		 String title="",comment="",star="",author="";
-		 
-		 Element subElement;
-		 Elements subLinks;
-		 String subHref="";
-		 if(onePage==true)
-		 {
-			 
-		     links = doc.getElementsByClass("comment-item");
-		     title=doc.title();
-		     
-			 for(int i=0;i<links.size();i++)
-			 {
-				 element=links.get(i);
-				 subLinks=element.getElementsByTag("span");
-				 for(int j=0;j<subLinks.size();j++)
-				 {
-					 subElement=subLinks.get(j);
-					 if(subElement.attr("class").indexOf("sml-rank-stars")>-1)
-					 {
-						 star=subElement.attr("class");
-						 //System.err.println("star:"+star);
-					 }
-				 }
+		String url = fields.split("\001")[0];
+		int num = Integer.parseInt(fields.split("\001")[1]
+				.replaceAll("条点评", "").trim());
+
+		Document doc = null;
+		doc = Jsoup.parse(fetcher.getSource("http://" + url));
+
+		// 判断是否只有一页点评
+		Elements links = doc.getElementsByTag("a");
+
+		Element element = null;
+		String href = "";
+
+		boolean onePage = true;
+		for (int i = 0; i < links.size(); i++) {
+			element = links.get(i);
+			href = element.attr("href");
+
+			if (SSO.tioe(href)) {
+				continue;
+			}
+			if (Pattern.matches("/shop/\\d+/review_more", href)) {
+				onePage = false;
+				// System.err.println(element.toString());
+			}
+
+		}
+
+		String title = "", comment = "", star = "", author = "";
+
+		Element subElement;
+		Elements subLinks;
+		String subHref = "";
+		if (onePage == true) {
+			System.err.println("one page");
+			links = doc.getElementsByClass("comment-item");
+			title = doc.title();
+
+			for (int i = 0; i < links.size(); i++) {
+				element = links.get(i);
+				subLinks = element.getElementsByTag("span");
+				for (int j = 0; j < subLinks.size(); j++) {
+					subElement = subLinks.get(j);
+					if (subElement.attr("class").indexOf("sml-rank-stars") > -1) {
+						star = subElement.attr("class");
+						// System.err.println("star:"+star);
+					}
+				}
+
+				subLinks = element.getElementsByTag("a");
+
+				for (int j = 0; j < subLinks.size(); j++) {
+					subElement = subLinks.get(j);
+					subHref = subElement.attr("href");
+
+					if (Pattern.matches("/member/\\d+", subHref)) {
+						author = host + subHref;
+					}
+				}
+
+				subLinks = element.getElementsByClass("desc");
+				for (int j = 0; j < subLinks.size(); j++) {
+					subElement = subLinks.get(j);
+					if (subElement == null) {
+						continue;
+					}
+
+					comment = subElement.text();
+				}
+
+				comment_list.add(url + "\001" + title + "\001" + author
+						+ "\001" + star + "\001" + comment);
+
+			}
+			return comment_list;
+		} else// multiple page
+		{
+			System.err.println("multiple page");
+			links = doc.getElementsByClass("comment-all");
+			title=doc.title();
+			String revAll="";
+			for (int i = 0; i < links.size(); i++) {
+				element = links.get(i);
+				subLinks = element.getElementsByTag("a");
+
+				for (int j = 0; j < subLinks.size(); j++) {
+					subElement = subLinks.get(j);
+					subHref = subElement.attr("href");
+
+					if (Pattern.matches("/shop/\\d+/review_all.*", subHref))
+						revAll=subHref;
+				}
+			}
+			
+			
+			int page=1;
+			int maxPage=1;
+			int tPage=0;
+			String revLink=url.replaceAll("#comment", "/review_more");
+			
+			String revNLink="";
+			while(page<=maxPage)
+			{
+				if(page>1)
+				{
+					revNLink=revLink+"?pageno="+page;
+					doc = Jsoup.parse(fetcher.getSource("http://" + revNLink));
+					System.err.println("parsing:"+revNLink);
+				}
+				else
+				{
+					doc = Jsoup.parse(fetcher.getSource("http://" + revLink));
+					System.err.println("parsing:"+revLink);
+				}
 				
-				 
-				 subLinks=element.getElementsByTag("a");
-				 
-				 for(int j=0;j<subLinks.size();j++)
-				 {
-					 subElement=subLinks.get(j);
-					 subHref=subElement.attr("href");
-					 
-					 if (Pattern.matches("/member/\\d+", subHref))
-					 {
-						 author=host+subHref;
-					 }
-				 }
-				 
-				 subLinks=element.getElementsByClass("desc");
-				 for(int j=0;j<subLinks.size();j++)
-				 {
-					 subElement=subLinks.get(j);
-					 if(subElement==null)
-					 {
-						 continue;
-					 }
-					 
-					 comment=subElement.text();
-				 }
-				 
-				 comment_list.add(url+"\001"+title+"\001"+author+"\001"+star+"\001"+comment);
-				 
-			 }
-			 
-		 }
-		
+				
+				links=doc.getElementsByClass("PageLink");
+				
+				for(int i=0;i<links.size();i++)
+				{
+					element=links.get(i);
+					tPage=Integer.parseInt(element.text());
+					if(tPage>maxPage)
+					{
+						maxPage=tPage;
+					}	
+					
+				}
+				
+				System.err.println("maxPage:"+maxPage);
+				
+				links = doc.getElementsByClass("content");
+				
+				for (int i = 0; i < links.size(); i++) {
+					element = links.get(i);
+					subLinks = element.getElementsByTag("span");
+					for (int j = 0; j < subLinks.size(); j++) {
+						subElement = subLinks.get(j);
+						if (subElement.attr("class").indexOf("item-rank-rst") > -1) {
+							star = subElement.attr("class");
+							// System.err.println("star:"+star);
+						}
+					}
+
+					subLinks = element.parent().getElementsByTag("a");
+
+					for (int j = 0; j < subLinks.size(); j++) {
+						subElement = subLinks.get(j);
+						subHref = subElement.attr("href");
+
+						if (Pattern.matches("/member/\\d+", subHref)) {
+							author = host + subHref;
+						}
+					}
+
+					subLinks = element.getElementsByClass("J_brief-cont");
+					for (int j = 0; j < subLinks.size(); j++) {
+						subElement = subLinks.get(j);
+					
+						if (subElement == null) {
+							continue;
+						}
+						//System.err.println("subELement:"+subElement.toString());
+						comment = subElement.text();
+					}
+
+					comment_list.add(url + "\001" + title + "\001" + author
+							+ "\001" + star + "\001" + comment);
+
+				}
+				
+				
+				page++;
+				
+			}
+			
+			
+			
+			
+		}
+
 		return comment_list;
 	}
 
@@ -317,21 +410,19 @@ public class DianPing extends SiteObject implements Entity {
 	public static void main(String[] args) {
 		DianPing dp = new DianPing();
 		dp.init("master/slaves/dianping");
-		
-		Entity entity=null;
-		
-		int i=0;
-		while((entity=dp.last())!=null)
-		{
+
+		Entity entity = null;
+
+		int i = 0;
+		while ((entity = dp.next()) != null) {
 			i++;
-			//if(i>5)
-			//{
-			//	break;
-			//}
+			// if(i>5)
+			// {
+			// break;
+			// }
 			dp.save();
-			List<String> list=entity.parse();
-			for(int j=0;j<list.size();j++)
-			{
+			List<String> list = entity.parse();
+			for (int j = 0; j < list.size(); j++) {
 				System.out.println(list.get(j));
 			}
 		}
