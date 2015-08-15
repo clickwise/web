@@ -20,7 +20,10 @@ import org.web.SiteObject;
 import cn.clickwise.lib.string.SSO;
 
 /**
- * site_object_i: --config.txt --entity.txt --state.txt
+ * --master
+ *  |--slaves
+ *     |--dianping
+ *        |--config.txt entity.txt state.txt
  * 
  * @author liqi6
  *
