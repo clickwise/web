@@ -1,5 +1,6 @@
 import org.web.comment.douban.CommentTask;
 import org.web.sites.DianPing;
+import org.web.sites.JD;
 
 
 public class HiveCli {
@@ -31,11 +32,15 @@ public static void main(String[] args) {
 					"output/douban/commentlist.txt");
 		}*/
 	
-	DianPing dp = new DianPing();
+	//DianPing dp = new DianPing();
 	// dp.getList("master/slaves/dianping/route.txt",
 	// "master/slaves/dianping/list.txt");
 	////dp.getEnities("master/slaves/dianping/list.txt",
 		////	"master/slaves/dianping/entity.txt");
+	
+	JD jd = new JD();
+	jd.getEnities("master/slaves/jd/list.txt",
+			"master/slaves/jd/entity.txt");
 	}
 	
 }

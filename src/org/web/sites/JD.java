@@ -94,9 +94,9 @@ public class JD extends SiteObject implements Entity {
 
                 turl="http://"+turl;
 				l++;
-				if (l > 1) {
-					break;
-				}
+				//if (l > 1) {
+				//	break;
+				//}
 
 				System.err.println("turl:" + turl);
 				Document doc = null;
@@ -158,7 +158,7 @@ public class JD extends SiteObject implements Entity {
 							//System.err.println("deepElmement:"+ deepElement.toString());
 							if (Pattern.matches("http://item.jd.com/\\d+.html",deepHref)) {
 								if (!(link_hash.containsKey(deepHref))) {
-									pw.println(host + href);
+									//pw.println(host + href);
 									title = deepElement.text();
 									plink = deepHref;
 									link_hash.put(href, 1);
@@ -192,12 +192,12 @@ public class JD extends SiteObject implements Entity {
 
 				}
 
-				System.err.println(title + "|" + plink + "|" + comment);
-
-				System.err.println("max:" + max);
+				pw.println(title + "|" + plink + "|" + comment);
+				pw.flush();
+				//System.err.println("max:" + max);
 
 				// scan through the rest pages
-				for (int j = 2; j <= 3; j++) {
+				for (int j = 2; j <= max; j++) {
 					nline = turl + "&page=" + j;
 					System.out.println("nline:" + nline);
 					doc = null;
@@ -225,7 +225,7 @@ public class JD extends SiteObject implements Entity {
 								//System.err.println("deepElmement:"+ deepElement.toString());
 								if (Pattern.matches("http://item.jd.com/\\d+.html",deepHref)) {
 									if (!(link_hash.containsKey(deepHref))) {
-										pw.println(host + href);
+										//pw.println(host + href);
 										title = deepElement.text();
 										plink = deepHref;
 										link_hash.put(href, 1);
@@ -260,7 +260,8 @@ public class JD extends SiteObject implements Entity {
 					}
 					
 					
-					System.err.println(title + "|" + plink + "|" + comment);
+					pw.println(title + "|" + plink + "|" + comment);
+					pw.flush();
 					
 				}
 
