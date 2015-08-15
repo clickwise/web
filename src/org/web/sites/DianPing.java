@@ -412,9 +412,9 @@ public class DianPing extends SiteObject implements Entity {
 		dp.init("master/slaves/dianping");
 
 		Entity entity = null;
-
+        
 		int i = 0;
-		while ((entity = dp.next()) != null) {
+		while ((entity = dp.last()) != null) {
 			i++;
 			// if(i>5)
 			// {
