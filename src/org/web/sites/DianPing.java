@@ -131,7 +131,7 @@ public class DianPing extends SiteObject implements Entity {
 	@Override
 	public List<String> parse() {
 
-		// System.err.println("parsing:"+elist.get(objectIndex));
+		 System.err.println("parsing:"+elist.get(objectIndex));
 
 		List<String> comment_list = new ArrayList<String>();
 

@@ -57,7 +57,7 @@ public class JD extends SiteObject implements Entity {
 			fetcher = new FetcherObject();
 			fetcher.loadProxyHosts("master/p.txt");
 			BufferedReader br = new BufferedReader(new FileReader(directory
-					+ "/a.txt"));
+					+ "/entity.txt"));
 			String line = "";
 
 			while ((line = br.readLine()) != null) {
