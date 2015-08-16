@@ -43,7 +43,7 @@ public class JD extends SiteObject implements Entity {
 
 	private int objectIndex = -1;
 
-	private String root = "";
+	private static String root = "";
 
 
 
@@ -118,10 +118,12 @@ public class JD extends SiteObject implements Entity {
 	public void save() {
 		try {
 			PrintWriter pw = new PrintWriter(root + "/state.txt");
-
-			pw.println("current=" + index);
-			pw.println(elist.get(index));
-
+		    // System.out.println(root + "/state.txt");
+           // System.out.println("current=" + objectIndex);
+			pw.println("current=" + objectIndex);
+			pw.println(elist.get(objectIndex));
+			//System.out.println("currentUrl="+elist.get(objectIndex));
+            pw.flush();
 			pw.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -266,7 +268,10 @@ public class JD extends SiteObject implements Entity {
 		 
 		 //generalComment
 		 
-		 
+		 if(objectIndex%5==1)
+		 {
+			 save();
+		 }
 		 
 		return list;
 	}
@@ -323,7 +328,7 @@ public class JD extends SiteObject implements Entity {
 			{
 				jsonObject=jsonArray.getJSONObject(i);
 			
-				comItem=jsonObject.get("guid")+"\001"+jsonObject.get("score")+"\001"+(jsonObject.get("content")+"").trim();
+				comItem=jsonObject.get("id")+"\001"+jsonObject.get("guid")+"\001"+jsonObject.get("score")+"\001"+(jsonObject.get("content")+"").trim();
 				
 				if(SSO.tnoe(comItem))
 				{
@@ -564,13 +569,13 @@ public class JD extends SiteObject implements Entity {
 		
 		PrintWriter pw=new PrintWriter("json_t.txt");
 		
-		while ((entity = jd.last()) != null) {
+		while ((entity = jd.next()) != null) {
 			i++;
 			// if(i>5)
 			// {
 			// break;
 			// }
-			jd.save();
+			//jd.save();
 			List<String> list = entity.parse();
 			for (int j = 0; j < list.size(); j++) {
 				pw.println(list.get(j));

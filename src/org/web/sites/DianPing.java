@@ -40,7 +40,7 @@ public class DianPing extends SiteObject implements Entity {
 
 	private int objectIndex = -1;
 
-	private String root = "";
+	private static String root = "";
 
 	@Override
 	public void init(String directory) {
@@ -115,10 +115,12 @@ public class DianPing extends SiteObject implements Entity {
 
 		try {
 			PrintWriter pw = new PrintWriter(root + "/state.txt");
-
-			pw.println("current=" + index);
-			pw.println(elist.get(index));
-
+		   //  System.out.println(root + "/state.txt");
+           // System.out.println("current=" + objectIndex);
+			pw.println("current=" + objectIndex);
+			pw.println(elist.get(objectIndex));
+			//System.out.println("currentUrl="+elist.get(objectIndex));
+            pw.flush();
 			pw.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -165,6 +167,12 @@ public class DianPing extends SiteObject implements Entity {
 			}
 
 		}
+		
+		//System.err.println("objectIndex="+objectIndex);
+		 if(objectIndex%5==1)
+		 {
+			 save();
+		 }
 
 		String title = "", comment = "", star = "", author = "";
 
@@ -172,7 +180,7 @@ public class DianPing extends SiteObject implements Entity {
 		Elements subLinks;
 		String subHref = "";
 		if (onePage == true) {
-			System.err.println("one page");
+			//System.err.println("one page");
 			links = doc.getElementsByClass("comment-item");
 			title = doc.title();
 
@@ -215,7 +223,7 @@ public class DianPing extends SiteObject implements Entity {
 			return comment_list;
 		} else// multiple page
 		{
-			System.err.println("multiple page");
+			//System.err.println("multiple page");
 			links = doc.getElementsByClass("comment-all");
 			title=doc.title();
 			String revAll="";
@@ -318,6 +326,8 @@ public class DianPing extends SiteObject implements Entity {
 			
 			
 		}
+		
+
 
 		return comment_list;
 	}
@@ -417,13 +427,13 @@ public class DianPing extends SiteObject implements Entity {
 		Entity entity = null;
         
 		int i = 0;
-		while ((entity = dp.last()) != null) {
+		while ((entity = dp.next()) != null) {
 			i++;
 			// if(i>5)
 			// {
 			// break;
 			// }
-			dp.save();
+			//dp.save();
 			List<String> list = entity.parse();
 			for (int j = 0; j < list.size(); j++) {
 				System.out.println(list.get(j));

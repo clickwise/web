@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.web.sites.DianPing;
+import org.web.sites.JD;
 
 /**
  * directory structure --master --config.txt --proxy.txt --slaves
@@ -32,6 +33,11 @@ public class Master {
 		DianPing dp = new DianPing();
 		dp.init("master/slaves/dianping");
 		sites.add(dp);
+		
+		JD jd = new JD();
+		jd.init("master/slaves/jd");
+		sites.add(jd);
+		
 
 	}
 
@@ -66,10 +72,10 @@ public class Master {
 			
 			nc++;
 			
-			if(nc%5==0)
-			{
-				save();
-			}
+			//if(nc%5==0)
+			//{
+				//save();
+			//}
 
 		}
 
@@ -79,9 +85,9 @@ public class Master {
 	 * update
 	 */
 	public void save() {
-		for (int i = 0; i < sites.size(); i++) {
-			sites.get(i).save();
-		}
+		//for (int i = 0; i < sites.size(); i++) {
+		//	sites.get(i).save();
+		//}
 	}
 	
 	public static void main(String[] args)
