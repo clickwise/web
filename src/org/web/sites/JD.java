@@ -182,7 +182,7 @@ public class JD extends SiteObject implements Entity {
 		
 		 //poorComment
 		// System.err.println("poorUrl:"+poorUrl);
-		 String content=fetcher.getSource(poorUrl, 3, "gbk");
+		 String content=fetcher.getSource(goodUrl, 3, "gbk");
 		 
 		// System.err.println("conent:"+content);
 		 List list=new ArrayList<String>();
@@ -207,14 +207,24 @@ public class JD extends SiteObject implements Entity {
 			 goodSel=poorSel+generalSel;
 		 }
 		 
+		 if(generalCount==0)
+		 {
+			 generalSel=0;
+		 }
+		 
+		 if(poorCount==0)
+		 {
+			 poorSel=0;
+		 }
+		 
 		 System.err.println("poorSel:"+poorSel+" generalSel:"+generalSel+" goodSel:"+goodSel);
-		 for(int i=2;i<=poorSel;i++)
+		 for(int i=1;i<=poorSel;i++)
 		 {
 			 poorUrl="http://s.club.jd.com/productpage/p-"+pid+"-s-1-t-0-p-"+(i-1)+".html?callback=fetchJSON_comment";
 			 content=fetcher.getSource(poorUrl, 3, "gbk");
 			 
 			 //System.err.println("conent:"+content);
-			 list=new ArrayList<String>();
+			// list=new ArrayList<String>();
 			 jp=new JsonPage(content);
 			 
 			 for(int j=0;j<jp.comments.size();j++)
@@ -239,7 +249,7 @@ public class JD extends SiteObject implements Entity {
 			 }
 		 } 
 		 
-		 for(int i=1;i<=goodSel;i++)
+		 for(int i=2;i<=goodSel;i++)
 		 {
 			 poorUrl="http://s.club.jd.com/productpage/p-"+pid+"-s-3-t-0-p-"+(i-1)+".html?callback=fetchJSON_comment";
 			 content=fetcher.getSource(poorUrl, 3, "gbk");
