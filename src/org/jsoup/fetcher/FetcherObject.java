@@ -2,7 +2,12 @@ package org.jsoup.fetcher;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -175,11 +180,67 @@ public class FetcherObject {
 
 			httpclient.getParams().setParameter(
 					"http.connection-manager.timeout", timeout);
+		}else if (type == 3) {
+
+			httpclient
+					.getParams()
+					.setParameter("Accept",
+							"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+			httpclient.getParams().setParameter("Accept-Encoding",
+					"gzip, deflate, sdch");
+			httpclient.getParams().setParameter("Accept-Language",
+					"zh-CN,zh;q=0.8");
+			httpclient.getParams().setParameter("Connection", "keep-alive");
+			httpclient
+					.getParams()
+					.setParameter(
+							"Cookie",
+							"unpl=V2_ZzNtbRZeEB0mAUNRKRoLUmIKQQ5LUEBHdghFUi9OCFZgURIJclRCFXEUR11nGVgUZwIZXUZcQhxFCHZXchBYAWcCGllyBBNNIEwHDCRSBUE3XHxcFVUWF3RaTwEoSVoAYwtBDkZUFBYhW0IAKElVVTUFR21yV0oldQl2VH8aXwRhChpYcmdEJUU4QVZ4HFoHVwIiXA%3d%3d; mt_subsite=||1111%2C1439604908; user-key=68bc7e46-06f7-4192-aa95-3a829b0a059b; cn=0; __jda=122270672.152207894.1439268577.1439612631.1439690063.3; __jdb=122270672.4.152207894|3.1439690063; __jdc=122270672; __jdv=122270672|baidu-pinzhuan|t_288551095_baidupinzhuan|cpc|0f3d30c8dba7459bb52f2eb5eba8ac7d_0_e8b9b844c2ff48bb862c2127efeb6c1e; ipLocation=%u5317%u4EAC; areaId=1; ipLoc-djd=1-72-2799-0; __jdu=152207894");
+			httpclient.getParams().setParameter("Host", "s.club.jd.com");
+			httpclient.getParams().setParameter("If-Modified-Since",
+					"Sun, 16 Aug 2015 02:37:29 GMT");
+			httpclient
+					.getParams()
+					.setParameter(
+							"User-Agent:",
+							"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36");
+			httpclient.getParams().setParameter(
+					CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);// 连接时间20s
+			httpclient.getParams().setParameter(
+					CoreConnectionPNames.SO_TIMEOUT, timeout);
+			httpclient.getParams().setParameter("http.socket.timeout", timeout);
+
+			httpclient.getParams().setParameter("http.connection.timeout",
+					timeout);
+
+			httpclient.getParams().setParameter(
+					"http.connection-manager.timeout", timeout);
+
 		}
 
 		return httpclient;
 	}
 
+	
+	public static String loadJson (String url) {  
+        StringBuilder json = new StringBuilder();  
+        try {  
+            URL urlObject = new URL(url);  
+            URLConnection uc = urlObject.openConnection();  
+            BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream(),"gbk"));  
+            String inputLine = null;  
+            while ( (inputLine = in.readLine()) != null) {  
+                json.append(inputLine);  
+            }  
+            in.close();  
+        } catch (MalformedURLException e) {  
+            e.printStackTrace();  
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        }  
+        return json.toString();  
+    }  
+	
 	public String getSource(String url) {
 		String source = "";
 
@@ -207,7 +268,35 @@ public class FetcherObject {
 		}
 		return source;
 	}
+	
+	public String getSource(String url,int client_type,String charset) {
+		String source = "";
 
+		String con = "";
+
+		try {
+			HttpGet httpget = new HttpGet(url);
+
+			HttpResponse response = getHttpClient(client_type).execute(httpget);
+			HttpEntity entity = response.getEntity();
+
+			String content = "";
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					entity.getContent(),charset));
+			String line = "";
+			while ((line = br.readLine()) != null) {
+				content = content + line;
+			}
+			source = content;
+
+		} catch (Exception e) {
+			banProxy.put(rani, proxyList.get(rani));
+			System.err.println(e.getMessage());
+
+		}
+		return source;
+	}
+	
 	public  void getRandomPrxoy() {
 		double ran = Math.random();
 		rani = (int) (ran * proxyList.size());
@@ -217,6 +306,49 @@ public class FetcherObject {
 		}
 	}
 
+	public String getSourceEasy(String url) {
+		String source = "";
+		HttpClient httpclient = new DefaultHttpClient();
+
+		
+		httpclient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 1000);
+		httpclient.getParams().setParameter(
+				CoreConnectionPNames.CONNECTION_TIMEOUT, timeout);// 连接时间20s
+		httpclient.getParams().setParameter(
+				CoreConnectionPNames.SO_TIMEOUT, timeout);
+		httpclient.getParams().setParameter("http.socket.timeout", timeout);
+
+		httpclient.getParams().setParameter("http.connection.timeout",
+				timeout);
+
+		httpclient.getParams().setParameter(
+				"http.connection-manager.timeout", timeout);
+		url = url.trim();
+
+		String con = "";
+
+		try {
+			HttpGet httpget = new HttpGet(url);
+
+			HttpResponse response = httpclient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			InputStream inSm = entity.getContent();
+			InputStreamReader isr = new InputStreamReader(inSm);
+			BufferedReader br = new BufferedReader(isr);
+			String line = "";
+			con = "";
+			while ((line = br.readLine()) != null) {
+				con += (line + "\n");
+			}
+			source = con;
+			// source=entity.getContent();
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return source;
+	}
+	
 	public String getSourceEnsure(String url) {
 		String content = "";
 

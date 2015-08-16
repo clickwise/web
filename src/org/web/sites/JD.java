@@ -2,7 +2,9 @@ package org.web.sites;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -38,36 +40,154 @@ public class JD extends SiteObject implements Entity {
 
 	private String root = "";
 
-	@Override
-	public List<String> parse() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public void init(String directory) {
-		// TODO Auto-generated method stub
+		
+		root = directory;
+
+		elist = new ArrayList<String>();
+		try {
+			fetcher = new FetcherObject();
+			fetcher.loadProxyHosts("master/p.txt");
+			BufferedReader br = new BufferedReader(new FileReader(directory
+					+ "/a.txt"));
+			String line = "";
+
+			while ((line = br.readLine()) != null) {
+				if ((SSO.tioe(line)) ) {
+					continue;
+				}
+				
+				//System.err.println("adding line :"+line);
+
+				elist.add(line.trim());
+			}
+
+			br.close();
+
+			br = new BufferedReader(new FileReader(directory + "/state.txt"));
+
+			while ((line = br.readLine()) != null) {
+				if ((SSO.tioe(line)) || (line.indexOf("current") < 0)) {
+					continue;
+				}
+
+				index = Integer.parseInt(line.split("\\=")[1]);
+			}
+
+			br.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
 	@Override
 	public Entity next() {
-		// TODO Auto-generated method stub
-		return null;
+		if (index >= (elist.size() - 1)) {
+			return null;
+		}
+
+		JD jd = new JD();
+		index++;
+		jd.objectIndex = index;
+		return jd;
 	}
 
 	@Override
 	public Entity last() {
-		// TODO Auto-generated method stub
-		return null;
+		if (index <= 0) {
+			return null;
+		}
+
+		JD jd = new JD();
+		index--;
+		jd.objectIndex = index;
+		return jd;
 	}
 
 	@Override
 	public void save() {
-		// TODO Auto-generated method stub
+		try {
+			PrintWriter pw = new PrintWriter(root + "/state.txt");
+
+			pw.println("current=" + index);
+			pw.println(elist.get(index));
+
+			pw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
+	
+	@Override
+	public List<String> parse() {
+		
+		 System.err.println("parsing:"+elist.get(objectIndex));
+		 
+		 String title="";
+		 String url="";
+		 int comment=0;
+		 
+		 String clink=elist.get(objectIndex);
+		 
+		 
+		 String[] tokens=clink.split("\\|");
+		 if(tokens.length<3)
+		 {
+			 return null;
+		 }
+		 
+		 comment=Integer.parseInt(tokens[tokens.length-1]);
+		 url=tokens[tokens.length-2];
+		 
+		 if(tokens.length==3)
+		 {
+			 title=tokens[0];
+		 }
+		 else
+		 {
+			 title="";
+			 for(int i=0;i<tokens.length-2;i++)
+			 {
+				if(i!=tokens.length-3)
+			    title+=(tokens[i]+"|");
+				else
+				title+=(tokens[i]);	
+			 }
+			 
+			 title=title.trim();
+		 }
+		 
+		 String pid=url.replaceAll("http://item\\.jd\\.com/", "").replaceAll("\\.html", "");
+		 
+		 
+		 System.err.println("url:"+url+"  comment:"+comment+"  title:"+title+" pid:"+pid);
+		 
+		 String goodUrl="",generalUrl="",poorUrl="";
+		 goodUrl="http://s.club.jd.com/productpage/p-"+pid+"-s-3-t-0-p-0.html?callback=fetchJSON_comment";
+		 generalUrl="http://s.club.jd.com/productpage/p-"+pid+"-s-2-t-0-p-0.html?callback=fetchJSON_comment";
+		 poorUrl="http://s.club.jd.com/productpage/p-"+pid+"-s-1-t-0-p-0.html?callback=fetchJSON_comment";
+		 		 
+		 int goodPages=1,generalPages=1,poorPages=1;
+		
+		 System.err.println("poorUrl:"+poorUrl);
+		 String content=fetcher.getSource(poorUrl, 3, "gbk");
+		 
+		 System.err.println("conent:"+content);
+		 List list=new ArrayList<String>();
+		 
+		 list.add(content);
+		 
+		return list;
+	}
 
+	
+	/*
 	public void getEnities(String list, String entity) {
 
 		fetcher = new FetcherObject();
@@ -75,7 +195,7 @@ public class JD extends SiteObject implements Entity {
 
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(list));
-			PrintWriter pw = new PrintWriter(entity);
+			PrintWriter pw = new PrintWriter(new FileWriter(entity,true));
 			String line = "";
 			String nline = "";
 			int l = 0;
@@ -145,6 +265,9 @@ public class JD extends SiteObject implements Entity {
 				int comment = 0;
 
 				for (int k = 0; k < links.size(); k++) {
+					title="";
+					plink ="";
+					comment=0;
 					element = links.get(k);
 					//System.err.println("element:"+element.toString());
 					subLinks = element.getElementsByClass("p-name");
@@ -189,10 +312,10 @@ public class JD extends SiteObject implements Entity {
 						}
 
 					}
-
+					pw.println(title + "|" + plink + "|" + comment);
 				}
 
-				pw.println(title + "|" + plink + "|" + comment);
+				
 				pw.flush();
 				//System.err.println("max:" + max);
 
@@ -207,11 +330,12 @@ public class JD extends SiteObject implements Entity {
 
 					link_hash = new HashMap<String, Integer>();
 
-					title="";
-					plink ="";
-					comment=0;
+			
 
 					for (int k = 0; k < links.size(); k++) {
+						title="";
+						plink ="";
+						comment=0;
 						element = links.get(k);
 						//System.err.println("element:"+element.toString());
 						subLinks = element.getElementsByClass("p-name");
@@ -256,11 +380,11 @@ public class JD extends SiteObject implements Entity {
 							}
 
 						}
-
+						pw.println(title + "|" + plink + "|" + comment);
 					}
 					
 					
-					pw.println(title + "|" + plink + "|" + comment);
+					
 					pw.flush();
 					
 				}
@@ -274,11 +398,34 @@ public class JD extends SiteObject implements Entity {
 			e.printStackTrace();
 		}
 	}
-
-	public static void main(String[] args) {
+    */
+	
+	public static void main(String[] args) throws Exception {
 		JD jd = new JD();
-		jd.getEnities("master/slaves/jd/list.txt",
-				"master/slaves/jd/entity.txt");
+		//jd.getEnities("master/slaves/jd/list.txt",
+		//		"master/slaves/jd/entity.txt");
+		
+		jd.init("master/slaves/jd");
+
+		Entity entity = null;
+        
+		int i = 0;
+		
+		PrintWriter pw=new PrintWriter("json_t.txt");
+		
+		while ((entity = jd.last()) != null) {
+			i++;
+			// if(i>5)
+			// {
+			// break;
+			// }
+			jd.save();
+			List<String> list = entity.parse();
+			for (int j = 0; j < list.size(); j++) {
+				pw.println(list.get(j));
+			}
+		}
+		pw.close();
 	}
 
 }

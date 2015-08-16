@@ -39,8 +39,8 @@ public static void main(String[] args) {
 		////	"master/slaves/dianping/entity.txt");
 	
 	JD jd = new JD();
-	jd.getEnities("master/slaves/jd/list.txt",
-			"master/slaves/jd/entity.txt");
+	////jd.getEnities("master/slaves/jd/list.txt",
+	////		"master/slaves/jd/entity.txt");
 	}
 	
 }
