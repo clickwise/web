@@ -7,8 +7,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.jsoup.Jsoup;
 import org.jsoup.fetcher.FetcherObject;
@@ -17,6 +21,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.web.Entity;
 import org.web.SiteObject;
+import org.web.json.JsonUtil;
 
 import cn.clickwise.lib.string.SSO;
 
@@ -127,7 +132,7 @@ public class JD extends SiteObject implements Entity {
 	@Override
 	public List<String> parse() {
 		
-		 System.err.println("parsing:"+elist.get(objectIndex));
+		 //System.err.println("parsing:"+elist.get(objectIndex));
 		 
 		 String title="";
 		 String url="";
@@ -173,17 +178,153 @@ public class JD extends SiteObject implements Entity {
 		 generalUrl="http://s.club.jd.com/productpage/p-"+pid+"-s-2-t-0-p-0.html?callback=fetchJSON_comment";
 		 poorUrl="http://s.club.jd.com/productpage/p-"+pid+"-s-1-t-0-p-0.html?callback=fetchJSON_comment";
 		 		 
-		 int goodPages=1,generalPages=1,poorPages=1;
+		 int goodCount=1,generalCount=1,poorCount=1;
 		
-		 System.err.println("poorUrl:"+poorUrl);
+		 //poorComment
+		// System.err.println("poorUrl:"+poorUrl);
 		 String content=fetcher.getSource(poorUrl, 3, "gbk");
 		 
-		 System.err.println("conent:"+content);
+		// System.err.println("conent:"+content);
 		 List list=new ArrayList<String>();
+		 JsonPage jp=new JsonPage(content);
 		 
-		 list.add(content);
+		 for(int i=0;i<jp.comments.size();i++)
+		 {
+		    list.add(url+"\001"+title+"\001"+jp.comments.get(i));
+		 }
+		 
+		 goodCount=jp.goodCount;
+		 generalCount=jp.generalCount;
+		 poorCount=jp.poorCount;
+		 
+		 int poorSel=poorCount/10+1;
+		 int generalSel=generalCount/10+1;
+		 int goodSel=goodCount/10+1;
+		 
+		
+		 if(goodSel>(poorSel+generalSel))
+		 {
+			 goodSel=poorSel+generalSel;
+		 }
+		 
+		 System.err.println("poorSel:"+poorSel+" generalSel:"+generalSel+" goodSel:"+goodSel);
+		 for(int i=2;i<=poorSel;i++)
+		 {
+			 poorUrl="http://s.club.jd.com/productpage/p-"+pid+"-s-1-t-0-p-"+(i-1)+".html?callback=fetchJSON_comment";
+			 content=fetcher.getSource(poorUrl, 3, "gbk");
+			 
+			 //System.err.println("conent:"+content);
+			 list=new ArrayList<String>();
+			 jp=new JsonPage(content);
+			 
+			 for(int j=0;j<jp.comments.size();j++)
+			 {
+			    list.add(url+"\001"+title+"\001"+jp.comments.get(j));
+			 }
+		 }
+		 
+		 
+		 for(int i=1;i<=generalSel;i++)
+		 {
+			 poorUrl="http://s.club.jd.com/productpage/p-"+pid+"-s-2-t-0-p-"+(i-1)+".html?callback=fetchJSON_comment";
+			 content=fetcher.getSource(poorUrl, 3, "gbk");
+			 
+			 //System.err.println("conent:"+content);
+			 //list=new ArrayList<String>();
+			 jp=new JsonPage(content);
+			 
+			 for(int j=0;j<jp.comments.size();j++)
+			 {
+			    list.add(url+"\001"+title+"\001"+jp.comments.get(j));
+			 }
+		 } 
+		 
+		 for(int i=1;i<=goodSel;i++)
+		 {
+			 poorUrl="http://s.club.jd.com/productpage/p-"+pid+"-s-3-t-0-p-"+(i-1)+".html?callback=fetchJSON_comment";
+			 content=fetcher.getSource(poorUrl, 3, "gbk");
+			 
+			 //System.err.println("conent:"+content);
+			// list=new ArrayList<String>();
+			 jp=new JsonPage(content);
+			 
+			 for(int j=0;j<jp.comments.size();j++)
+			 {
+			    list.add(url+"\001"+title+"\001"+jp.comments.get(j));
+			 }
+		 }  
+		 
+		 //generalComment
+		 
+		 
 		 
 		return list;
+	}
+	
+	private class JsonPage{
+		
+		public int goodCount=1;
+		public int generalCount=1;
+		public int poorCount=1;
+		
+		public String jsonContent="";
+		
+		public ArrayList<String> comments=new ArrayList<String>();
+		
+		public JsonPage(String jsonContent)
+		{
+		   this.jsonContent=jsonContent;
+		   parseJson();
+		}
+		
+		public void parseJson()
+		{
+			if(jsonContent.startsWith("fetchJSON_comment(")&&jsonContent.endsWith(");"))
+			{
+				jsonContent=jsonContent.substring(18, jsonContent.length()-2);
+			}
+			
+			Map flatMap=JsonUtil.getMapFromJson(jsonContent);
+			
+			String productCommentSummary=flatMap.get("productCommentSummary")+"";
+			
+			Map pMap=JsonUtil.getMapFromJson(productCommentSummary);
+			
+			goodCount=Integer.parseInt(pMap.get("goodCount")+"");
+			generalCount=Integer.parseInt(pMap.get("generalCount")+"");
+			poorCount=Integer.parseInt(pMap.get("poorCount")+"");
+	
+			String commentsJson=flatMap.get("comments")+"";
+			commentsJson=commentsJson.trim();
+			
+			//if(commentsJson.startsWith("[")&&commentsJson.endsWith("]"))
+			//{
+			//	commentsJson=commentsJson.substring(1, commentsJson.length()-1);
+			//}
+			
+			
+			JSONArray jsonArray=JSONArray.fromObject(commentsJson);
+			
+			JSONObject jsonObject=null;
+			
+			String comItem="";
+			
+			for(int i=0;i<jsonArray.size();i++)
+			{
+				jsonObject=jsonArray.getJSONObject(i);
+			
+				comItem=jsonObject.get("guid")+"\001"+jsonObject.get("score")+"\001"+(jsonObject.get("content")+"").trim();
+				
+				if(SSO.tnoe(comItem))
+				{
+				 comments.add(comItem);
+				}
+			}
+			
+			
+		}
+		
+		
 	}
 
 	

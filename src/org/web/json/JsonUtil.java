@@ -36,6 +36,7 @@ public class JsonUtil {
 	public static Map getRecursiveMapFromJson(String jsonString) {
 		setDataFormat2JAVA();
 		JSONObject jsonObject = JSONObject.fromObject(jsonString);
+		
 		Map map = new HashMap();
 		String key="",value="";
 		Map subMap=null;
@@ -63,6 +64,7 @@ public class JsonUtil {
 		          map.put(key, value);
 		       }
 		}
+		
 		return map;
 	 } 
 	
