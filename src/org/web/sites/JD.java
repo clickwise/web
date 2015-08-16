@@ -57,7 +57,7 @@ public class JD extends SiteObject implements Entity {
 			fetcher = new FetcherObject();
 			fetcher.loadProxyHosts("master/p.txt");
 			BufferedReader br = new BufferedReader(new FileReader(directory
-					+ "/entity.txt"));
+					+ "/a.txt"));
 			String line = "";
 
 			while ((line = br.readLine()) != null) {
@@ -328,7 +328,7 @@ public class JD extends SiteObject implements Entity {
 			{
 				jsonObject=jsonArray.getJSONObject(i);
 			
-				comItem=jsonObject.get("id")+"\001"+jsonObject.get("guid")+"\001"+jsonObject.get("score")+"\001"+(jsonObject.get("content")+"").trim();
+				comItem=jsonObject.get("id")+"\001"+jsonObject.get("guid")+"\001"+jsonObject.get("score")+"\001"+(jsonObject.get("content")+"").trim().replaceAll("\\s+", " ");
 				
 				if(SSO.tnoe(comItem))
 				{
@@ -571,12 +571,20 @@ public class JD extends SiteObject implements Entity {
 		
 		while ((entity = jd.next()) != null) {
 			i++;
+			if(entity==null)
+			{
+				continue;
+			}
 			// if(i>5)
 			// {
 			// break;
 			// }
 			//jd.save();
 			List<String> list = entity.parse();
+			if(list ==null)
+			{
+				continue;
+			}
 			for (int j = 0; j < list.size(); j++) {
 				pw.println(list.get(j));
 			}

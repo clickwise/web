@@ -217,7 +217,7 @@ public class DianPing extends SiteObject implements Entity {
 				}
 
 				comment_list.add(url + "\001" + title + "\001" + author
-						+ "\001" + star + "\001" + comment);
+						+ "\001" + star + "\001" + comment.trim().replaceAll("\\s+", " "));
 
 			}
 			return comment_list;
