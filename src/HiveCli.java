@@ -1,3 +1,4 @@
+import org.web.Master;
 import org.web.comment.douban.CommentTask;
 import org.web.sites.DianPing;
 import org.web.sites.JD;
@@ -38,9 +39,14 @@ public static void main(String[] args) {
 	////dp.getEnities("master/slaves/dianping/list.txt",
 		////	"master/slaves/dianping/entity.txt");
 	
-	JD jd = new JD();
+	////JD jd = new JD();
 	////jd.getEnities("master/slaves/jd/list.txt",
 	////		"master/slaves/jd/entity.txt");
+	Master master=new Master();
+	master.init();
+	master.get();
+	
+	
 	}
 	
 }

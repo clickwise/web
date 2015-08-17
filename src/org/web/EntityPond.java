@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
  * current parse task
  * it maintain an entity queue
@@ -19,14 +23,18 @@ public class EntityPond extends Pond {
 	private int count;
 
 	private int allCount;
-	private PrintWriter logger = null;
+	static Logger logger = LoggerFactory.getLogger(EntityPond.class);
+	//private PrintWriter logger = null;
 
 	public EntityPond() {
+		/*
 		try {
 			logger = new PrintWriter(new FileWriter("test_logger", true));
 		} catch (Exception e) {
 
 		}
+		*/
+		
 	}
 
 	synchronized public  void incrCount() {
@@ -70,16 +78,17 @@ public class EntityPond extends Pond {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			logger.flush();
+			//logger.flush();
 		}
 	}
 
 	private synchronized void printContent(List<String> list) {
 		for(int i=0;i<list.size();i++)
 		{
-		  logger.println(list.get(i));
+			logger.info(list.get(i));
+		  //logger.println(list.get(i));
 		}
-		logger.flush();
+		//logger.flush();
 	}
 
 	public int getCount() {
